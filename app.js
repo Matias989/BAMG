@@ -19,7 +19,10 @@ const io = new Server(server, {
     origin: config.corsOrigin,
     methods: ["GET", "POST"],
     credentials: true
-  }
+  },
+  transports: ['websocket', 'polling'],
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 // Hacer io disponible globalmente
