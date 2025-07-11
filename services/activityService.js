@@ -97,9 +97,10 @@ class ActivityService {
 
   async addMemberToGroup(groupId, memberData) {
     try {
-      const group = await Group.findById(groupId);
+      // Recargar el grupo para asegurar el estado más reciente
+      let group = await Group.findById(groupId);
       if (!group) throw new Error('Grupo no encontrado');
-      // Buscar primer slot vacío
+      // Validar que sigue habiendo espacio
       const slotIdx = group.slots.findIndex(s => !s.user);
       if (slotIdx === -1) throw new Error('El grupo ya está lleno');
       // Verificar si el usuario ya está en otro grupo activo
@@ -108,7 +109,6 @@ class ActivityService {
         status: 'Activo',
         'slots.user.albionNick': memberData.albionNick
       });
-      // Permitir cambio de slot dentro del mismo grupo
       if (otherGroup && String(otherGroup._id) !== String(groupId)) {
         const err = new Error('Ya perteneces a otro grupo activo');
         err.code = 'ALREADY_IN_GROUP';
@@ -124,7 +124,10 @@ class ActivityService {
         }
         return slot;
       });
-      return await group.save();
+      await group.save();
+      // Recargar el grupo actualizado
+      group = await Group.findById(groupId);
+      return group;
     } catch (error) {
       throw error;
     }
@@ -132,7 +135,7 @@ class ActivityService {
 
   async removeMemberFromGroup(groupId, userNick) {
     try {
-      const group = await Group.findById(groupId);
+      let group = await Group.findById(groupId);
       if (!group) throw new Error('Grupo no encontrado');
       // Si el usuario es el creador, elimina el grupo
       if (group.creatorNick === userNick) {
@@ -145,7 +148,10 @@ class ActivityService {
         }
         return slot;
       });
-      return await group.save();
+      await group.save();
+      // Recargar el grupo actualizado
+      group = await Group.findById(groupId);
+      return group;
     } catch (error) {
       throw error;
     }
