@@ -23,6 +23,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/events', eventRoutes);
 
+// Ruta para el panel de administración
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/admin-interface.html');
+});
+
 // Middleware de manejo de errores
 app.use((error, req, res, next) => {
   console.error('Error:', error);
@@ -46,6 +51,8 @@ mongoose.connect(config.mongoUri, {
     console.log(`🚀 Servidor escuchando en puerto ${config.port}`);
     console.log(`🌍 Entorno: ${config.nodeEnv}`);
     console.log(`🔗 URL: http://localhost:${config.port}`);
+    console.log(`👑 Panel Admin: http://localhost:${config.port}/admin`);
+    console.log(`🔑 Credenciales Admin Hardcodeadas: admin / admin989`);
   });
 })
 .catch(err => {

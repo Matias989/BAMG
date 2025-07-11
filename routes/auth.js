@@ -20,6 +20,25 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
+// Middleware para verificar si es admin
+const requireAdmin = async (req, res, next) => {
+  try {
+    // Verificar si es el usuario admin hardcodeado
+    if (req.user.albionNick === 'admin') {
+      next();
+    } else {
+      // Verificar si es un usuario admin de la base de datos
+      const user = await authService.getUserProfile(req.user.userId);
+      if (!user.isAdmin) {
+        return res.status(403).json({ error: 'Acceso denegado. Se requieren permisos de administrador.' });
+      }
+      next();
+    }
+  } catch (error) {
+    return res.status(403).json({ error: 'Error al verificar permisos de administrador' });
+  }
+};
+
 // Registro de usuario
 router.post('/register', async (req, res) => {
   try {
@@ -145,6 +164,40 @@ router.get('/verify', authenticateToken, (req, res) => {
     valid: true, 
     user: req.user 
   });
+});
+
+// Obtener todos los usuarios (solo admin)
+router.get('/admin/users', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const users = await authService.getAllUsers();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Restablecer contraseña de usuario (solo admin)
+router.post('/admin/reset-password', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { userId, newPassword } = req.body;
+
+    if (!userId || !newPassword) {
+      return res.status(400).json({ 
+        error: 'ID de usuario y nueva contraseña son requeridos' 
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña debe tener al menos 6 caracteres' 
+      });
+    }
+
+    const result = await authService.resetUserPassword(userId, newPassword);
+    res.json({ message: 'Contraseña restablecida exitosamente', user: result });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 module.exports = router; 
