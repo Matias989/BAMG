@@ -9,6 +9,7 @@ const config = require('./config/config');
 const groupRoutes = require('./routes/groups');
 const eventRoutes = require('./routes/events');
 const authRoutes = require('./routes/auth');
+const templateRoutes = require('./routes/templates');
 
 const app = express();
 const server = createServer(app);
@@ -53,6 +54,7 @@ app.use(express.json({ limit: config.maxRequestSize }));
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/templates', templateRoutes);
 
 // Ruta para el panel de administración
 app.get('/admin', (req, res) => {
