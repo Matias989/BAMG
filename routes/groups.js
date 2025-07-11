@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const activityService = require('../services/activityService');
 const socketService = require('../services/socketService');
+const discordService = require('../services/discordService');
 
 // Obtener todos los grupos
 router.get('/', async (req, res) => {
@@ -71,7 +72,8 @@ router.post('/debug/emit-test', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const group = await activityService.createActivity(req.body, 'group');
-    
+    // Notificar a Discord
+    discordService.sendGroupCreatedNotification(group);
     // Emitir evento de nuevo grupo creado a todos los clientes
     await socketService.emitGroupCreated(group._id);
     

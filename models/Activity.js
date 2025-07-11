@@ -29,4 +29,6 @@ const ActivitySchema = new mongoose.Schema({
   discriminatorKey: 'activityType'
 });
 
+ActivitySchema.index({ createdAt: 1 }, { expireAfterSeconds: 3600 });
+
 module.exports = mongoose.model('Activity', ActivitySchema); 

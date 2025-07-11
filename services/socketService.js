@@ -43,10 +43,12 @@ class SocketService {
     }
   }
 
-  // Emitir eliminación de un grupo
-  emitGroupDeleted(groupId) {
-    global.io.emit('group_deleted', { groupId });
-    console.log(`📡 Grupo eliminado emitido: ${groupId}`);
+  // Emitir eliminación de un grupo (motivo opcional)
+  emitGroupDeleted(groupId, reason = null) {
+    const payload = { groupId };
+    if (reason) payload.reason = reason;
+    global.io.emit('group_deleted', payload);
+    console.log(`📡 Grupo eliminado emitido: ${groupId}${reason ? ' (motivo: ' + reason + ')' : ''}`);
   }
 
   // Emitir creación de un nuevo grupo
