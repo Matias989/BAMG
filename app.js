@@ -61,14 +61,6 @@ app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/admin-interface.html');
 });
 
-// Endpoint para obtener configuración del frontend
-app.get('/api/config', (req, res) => {
-  res.json({
-    apiUrl: process.env.VITE_API_URL || `http://localhost:${config.port}`,
-    socketUrl: process.env.VITE_SOCKET_URL || `http://localhost:${config.port}`
-  });
-});
-
 // Middleware de manejo de errores
 app.use((error, req, res, next) => {
   console.error('Error:', error);

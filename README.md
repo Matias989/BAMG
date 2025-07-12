@@ -42,20 +42,6 @@ API REST para el manejo de grupos y eventos de Albion Online.
 - `JWT_SECRET`: Clave secreta para JWT (¡cambia en producción!)
 - `MONGODB_URI`: URI de conexión a MongoDB
 - `CORS_ORIGIN`: URL del frontend (para CORS)
-- `VITE_API_URL`: URL de la API (usada por el admin interface)
-- `VITE_SOCKET_URL`: URL para WebSocket (usada por el frontend)
-
-### Configuración del archivo .env
-
-Copia el archivo `env.example` a `.env` y configura las variables:
-
-```bash
-cp env.example .env
-```
-
-Edita el archivo `.env` con tus valores:
-- Para desarrollo: `VITE_API_URL=http://localhost:4000`
-- Para producción: `VITE_API_URL=https://tu-dominio.com`
 
 ### Endpoints disponibles:
 
@@ -65,8 +51,6 @@ Edita el archivo `.env` con tus valores:
 - `POST /api/groups` - Crear grupo
 - `GET /api/events` - Obtener eventos
 - `POST /api/events` - Crear evento
-- `GET /api/config` - Obtener configuración del frontend
-- `GET /admin` - Panel de administración
 
 ## 🛠️ Desarrollo local
 
