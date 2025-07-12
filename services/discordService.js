@@ -21,7 +21,7 @@ class DiscordService {
         .map(slot => `🔸 ${slot.role}`)
         .join('\n') || 'Ninguno';
       // URL para unirse al grupo
-      const baseUrl = process.env.SITE_URL || 'https://bamg.onrender.com';
+      const baseUrl = process.env.SITE_URL;
       const joinUrl = `${baseUrl}/grupos/${group._id}`;
       // Embed de Discord con más estilos
       const embed = {
